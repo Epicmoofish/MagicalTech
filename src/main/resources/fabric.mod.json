@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "magical_tech",
+  "version": "${version}",
+  "name": "Magical Tech",
+  "description": "Adds magical themed technology",
+  "authors": [
+    "OceanicOxen"
+  ],
+  "contact": {
+    "repo": "https://github.com/benderet/MagicalTech"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/magical_tech/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "org.oceanic.magical_tech.client.MagicalTechClient"
+    ],
+    "main": [
+      "org.oceanic.magical_tech.MagicalTech"
+    ],
+    "jade": [
+      "org.oceanic.magical_tech.compat.jade.SouliumPlugin"
+    ],
+    "jei_mod_plugin": [
+      "org.oceanic.magical_tech.compat.jei.JEIPlugin"
+    ]
+  },
+  "mixins": [
+    "magical_tech.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  },
+  "accessWidener" : "magical_tech.accesswidener"
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "magical_tech:block/pipe_part",
+  "textures": {
+    "0": "magical_tech:block/energy_pipe",
+    "particle": "magical_tech:block/energy_pipe"
+  }
+}

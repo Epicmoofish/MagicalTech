@@ -1,0 +1,11 @@
+{
+  "name": "Distilled Soulium",
+  "icon": "minecraft:soul_sand",
+  "category": "magical_tech:power",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "When travelling through the nether a peculiar substance was discovered, Soul Sand. Somehow the sand of the nether was able to trap the souls of the dead until disturbed. These properties were perfect for the ideal power source, storable but not stable. If we are able to distill the souls found in the soul sand we could create the most powerful energy known to man."
+    }
+  ]
+}

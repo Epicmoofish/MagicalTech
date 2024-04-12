@@ -1,0 +1,23 @@
+{
+  "multipart": [
+    {   "apply": { "model": "magical_tech:block/energy_pipe_base" }},
+    {   "when": { "connection_north": "true" },
+      "apply": { "model": "magical_tech:block/energy_pipe_part", "uvlock": false }
+    },
+    {   "when": { "connection_east": "true" },
+      "apply": { "model": "magical_tech:block/energy_pipe_part", "y": 90, "uvlock": false }
+    },
+    {   "when": { "connection_south": "true" },
+      "apply": { "model": "magical_tech:block/energy_pipe_part", "y": 180, "uvlock": false }
+    },
+    {   "when": { "connection_west": "true" },
+      "apply": { "model": "magical_tech:block/energy_pipe_part", "y": 270, "uvlock": false }
+    },
+    {   "when": { "connection_up": "true" },
+      "apply": { "model": "magical_tech:block/energy_pipe_part", "x": 270, "uvlock": false }
+    },
+    {   "when": { "connection_down": "true" },
+      "apply": { "model": "magical_tech:block/energy_pipe_part", "x": 90, "uvlock": false }
+    }
+  ]
+}

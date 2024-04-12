@@ -1,0 +1,11 @@
+{
+  "name": "Redstone Flux",
+  "icon": "minecraft:redstone",
+  "category": "magical_tech:power",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The first source of energy discovered was $(4)Redstone Flux$(). This is a stable and powerful form of energy, great for machinery based only on electricity. However so much more can be done if we are able to mix electricity with the power of the arcane. Unfortunately the stability of redstone flux made it unusable so they had to discover a new source of power, $(l:power/distilled_soulium)$(5)Distilled Soulium$(/l)"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "block.magical_tech.creative_soulium_generator": "Creative Soulium Generator",
+  "block.magical_tech.crude_soulium_generator": "Crude Soulium Generator",
+
+  "config.jade.plugin_magical_tech.soulium_plugin": "Magical Tech DS",
+  "config.jade.plugin_magical_tech.soulium_burning": "Magical Tech Soul Burning",
+  "magical_tech.soulium_provider.error": "An error occurred while loading the Soulium Provider",
+  "magical_tech.soulium_provider": "DS: %d%% (%s/%s)",
+  "magical_tech.soul_burntime.error": "An error occurred while loading the Soulium Power Remaining",
+  "magical_tech.soul_burntime": "Undistilled Soul: %s DS",
+  "magical_tech.soul_burning_recipes.title": "Soul Distilling",
+  "itemGroup.magical_tech.magical_tech": "Magical Tech"
+}
