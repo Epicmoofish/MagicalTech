@@ -1,12 +1,16 @@
 package org.oceanic.magical_tech.blocks.abstractions;
 
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.annotation.Nullable;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -18,7 +22,7 @@ import org.oceanic.magical_tech.MagicalTech;
 import org.oceanic.magical_tech.blocks.abstractions.AbstractPipeConnection;
 import org.oceanic.magical_tech.blocks.abstractions.SouliumHolder;
 
-public abstract class AbstractPipeConnectionTE extends BlockEntity {
+public abstract class AbstractPipeConnectionTE extends BlockEntity implements MenuProvider, ExtendedScreenHandlerFactory {
     public int exportingUp = 1;
     public int exportingDown = 1;
     public int exportingNorth = 1;
@@ -63,6 +67,7 @@ public abstract class AbstractPipeConnectionTE extends BlockEntity {
         if (dir == Direction.WEST) return priorityWest;
         return 0;
     }
+//    protected abstract AbstractContainerScreen<> getScreen();
     @Override
     public void saveAdditional(CompoundTag nbt) {
         nbt.putInt("exporting_up", exportingUp);

@@ -12,16 +12,20 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -37,6 +41,7 @@ import org.oceanic.magical_tech.blocks.tileentities.SouliumBatteryTE;
 import org.oceanic.magical_tech.data_structures.Mutable;
 import org.oceanic.magical_tech.events.TickEventListener;
 import org.oceanic.magical_tech.items.WrenchItem;
+import org.oceanic.magical_tech.menus.EnergyPipeScreenHandler;
 import org.oceanic.magical_tech.soul_burning.SoulBurningMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +62,9 @@ public class MagicalTech implements ModInitializer {
     public static final Block SOULIUM_BATTERY  = new SouliumBattery(FabricBlockSettings.create().strength(4.0f));
     public static final Block ENERGY_PIPE  = new EnergyPipe(FabricBlockSettings.create().strength(4.0f));
     public static final Block ENERGY_PIPE_CONNECTION  = new EnergyPipeConnection(FabricBlockSettings.create().strength(4.0f));
+
+    public static final MenuType<EnergyPipeScreenHandler> ENERGY_PIPE_MENU = new ExtendedScreenHandlerType<>(EnergyPipeScreenHandler::new);
+
     private static final CreativeModeTab MAGICAL_TECH = FabricItemGroup.builder()
             .icon(() -> new ItemStack(Items.SOUL_CAMPFIRE))
             .title(Component.translatable("itemGroup."+ MOD_ID + ".magical_tech"))
@@ -156,6 +164,7 @@ public class MagicalTech implements ModInitializer {
         registerBlocks();
         registerItems();
         registerGroups();
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(MOD_ID, "energy_pipe"), ENERGY_PIPE_MENU);
     }
     public void registerGroups() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(MOD_ID, "magical_tech"), MAGICAL_TECH);

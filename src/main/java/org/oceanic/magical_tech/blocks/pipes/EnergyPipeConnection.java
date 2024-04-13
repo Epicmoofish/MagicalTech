@@ -3,18 +3,24 @@ package org.oceanic.magical_tech.blocks.pipes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.oceanic.magical_tech.MagicalTech;
 import org.oceanic.magical_tech.blocks.abstractions.*;
 import org.oceanic.magical_tech.blocks.pipes.tileentities.EnergyPipeConnectionTE;
 import org.oceanic.magical_tech.data_structures.Mutable;
 import org.oceanic.magical_tech.data_structures.PriorityHolders;
+import org.oceanic.magical_tech.items.WrenchItem;
 import org.oceanic.magical_tech.transferrable.DSTransfer;
 import org.oceanic.magical_tech.transferrable.Transferable;
 
@@ -112,6 +118,30 @@ public class EnergyPipeConnection extends AbstractPipeConnection {
         exporters.sort(Comparator.comparingInt(x -> -x.priority));
         importers.sort(Comparator.comparingInt(x -> -x.priority));
     }
+
+    @Nullable
+    @Override
+    public MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) {
+        if (level.getBlockEntity(blockPos) instanceof EnergyPipeConnectionTE te) {
+            return te;
+        }
+        return super.getMenuProvider(blockState, level, blockPos);
+    }
+
+    @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        if (!(player.getItemInHand(interactionHand).getItem() instanceof WrenchItem)) {
+            if (!level.isClientSide) {
+                MenuProvider screenHandlerFactory = blockState.getMenuProvider(level, blockPos);
+                if (screenHandlerFactory != null) {
+                    player.openMenu(screenHandlerFactory);
+                }
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+    }
+
     @Override
     public void doExports(BlockPos pos, Level world) {
         List<BlockPos> positions = this.getConnectedConnections(pos, world);
