@@ -23,20 +23,20 @@ import org.oceanic.magical_tech.blocks.abstractions.AbstractPipeConnection;
 import org.oceanic.magical_tech.blocks.abstractions.SouliumHolder;
 
 public abstract class AbstractPipeConnectionTE extends BlockEntity implements MenuProvider, ExtendedScreenHandlerFactory {
-    public int exportingUp = 1;
-    public int exportingDown = 1;
-    public int exportingNorth = 1;
-    public int exportingSouth = 1;
-    public int exportingEast = 1;
-    public int exportingWest = 1;
+    public int exportingUp = 0;
+    public int exportingDown = 0;
+    public int exportingNorth = 0;
+    public int exportingSouth = 0;
+    public int exportingEast = 0;
+    public int exportingWest = 0;
     public int roundRobinNum = 0;
     public int roundRobinIndex = 0;
-    public int priorityUp = 1;
-    public int priorityDown = 1;
-    public int priorityNorth = 1;
-    public int prioritySouth = 1;
-    public int priorityEast = 1;
-    public int priorityWest = 1;
+    public int priorityUp = 0;
+    public int priorityDown = 0;
+    public int priorityNorth = 0;
+    public int prioritySouth = 0;
+    public int priorityEast = 0;
+    public int priorityWest = 0;
     public AbstractPipeConnectionTE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }

@@ -9,5 +9,12 @@
   "magical_tech.soul_burntime.error": "An error occurred while loading the Soulium Power Remaining",
   "magical_tech.soul_burntime": "Undistilled Soul: %s DS",
   "magical_tech.soul_burning_recipes.title": "Soul Distilling",
-  "itemGroup.magical_tech.magical_tech": "Magical Tech"
+  "itemGroup.magical_tech.magical_tech": "Magical Tech",
+  "direction.down": "Down",
+  "direction.up": "Up",
+  "direction.north": "North",
+  "direction.south": "South",
+  "direction.east": "East",
+  "direction.west": "West",
+  "magical_tech.energy_pipe.title": "Energy Pipe Configuration"
 }

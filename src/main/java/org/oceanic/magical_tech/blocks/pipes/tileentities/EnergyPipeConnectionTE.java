@@ -3,6 +3,7 @@ package org.oceanic.magical_tech.blocks.pipes.tileentities;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -27,17 +28,31 @@ public class EnergyPipeConnectionTE extends AbstractPipeConnectionTE {
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable(MOD_ID, ".energy_pipe.title");
+        return Component.translatable(MOD_ID + ".energy_pipe.title");
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return new EnergyPipeScreenHandler(i, inventory);
+        return new EnergyPipeScreenHandler(i, inventory, this);
     }
-
     @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBlockPos(this.getBlockPos());
+    public void writeScreenOpeningData(ServerPlayer serverPlayerEntity, FriendlyByteBuf byteBuf) {
+        //The pos field is a public field from BlockEntity
+        byteBuf.writeInt(priorityUp);
+        byteBuf.writeInt(priorityDown);
+        byteBuf.writeInt(priorityNorth);
+        byteBuf.writeInt(prioritySouth);
+        byteBuf.writeInt(priorityWest);
+        byteBuf.writeInt(priorityEast);
+        byteBuf.writeInt(exportingUp);
+        byteBuf.writeInt(exportingDown);
+        byteBuf.writeInt(exportingNorth);
+        byteBuf.writeInt(exportingSouth);
+        byteBuf.writeInt(exportingWest);
+        byteBuf.writeInt(exportingEast);
+        for (Direction dir : Direction.values()) {
+            if (this.level != null) byteBuf.writeComponent(this.level.getBlockState(this.getBlockPos().relative(dir)).getBlock().getName());
+        }
     }
 }
