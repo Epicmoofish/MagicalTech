@@ -14,6 +14,9 @@ import net.minecraft.world.entity.player.Inventory;
 import org.oceanic.magical_tech.MagicalTech;
 
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHandler> {
     //A path to the gui texture. In this example we use the texture from the dispenser
@@ -23,7 +26,7 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
     private static final float directionPriorityCenter = 35.5f;
     private static final int directionSpacing = 14;
     private static final int directionLabelCenter = 20;
-    private static final int blockLabelCenter = 65;
+    private static final int blockLabelCenter = 63;
     private static final int directionIOCenter = 54;
 
     public EnergyPipeScreen(EnergyPipeScreenHandler handler, Inventory inventory, Component title) {
@@ -75,15 +78,19 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
             guiGraphics.pose().popPose();
 
             String blockLabel = this.menu.getNameOf(dir).getString();
-            int i2 = 0;
-            for (String x : blockLabel.split(" ")) {
+            float currentHeight = 0.0f;
+            for (String x : splitString(blockLabel)) {
+                
                 guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate((float) (k + ((directionSpacing * (i + 1) + directionWidth * i) + (directionWidth - font.width(x) / 2.0) / 2.0)), (float) l + blockLabelCenter + i2 * 5, 0.0F);
+                guiGraphics.pose().translate((float) (k + ((directionSpacing * (i + 1) + directionWidth * i) + (directionWidth - font.width(x)/2.0) / 2.0)), (float) l + blockLabelCenter + currentHeight, 0.0F);
+                float scale = 0.5f;
+                int height = font.lineHeight;
 
-                guiGraphics.pose().scale(0.5f, 0.5f, 0.5f);
+                guiGraphics.pose().scale(scale, scale, scale);
                 guiGraphics.drawString(this.font, x, 0, 0, 4210752, false);
                 guiGraphics.pose().popPose();
-                i2++;
+                currentHeight += height * scale;
+                if (blockLabelCenter + currentHeight >= this.imageHeight - 6) break;
             }
         }
         for (int i = 0; i < directions.length; i++) {
@@ -103,7 +110,27 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
         RenderSystem.enableDepthTest();
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
-
+    private List<String> splitString(String s) {
+        ArrayList<String> s2 = new ArrayList<>();
+        if (s.contains(" ")) {
+            for (String str : s.split(" ")) {
+                s2.addAll(splitString(str));
+            }
+        } else {
+            String str = "";
+            for (int i = 0; i<s.length(); i++) {
+                String stro = str + s.charAt(i);
+                if (font.width(stro) > 52) {
+                    s2.add(str);
+                    str = s.charAt(i) + "";
+                } else {
+                    str = stro;
+                }
+            }
+            s2.add(str);
+        }
+        return s2;
+    }
     @Override
     protected void init() {
         super.init();
