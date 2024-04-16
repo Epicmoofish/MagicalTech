@@ -1,5 +1,5 @@
 package org.oceanic.magical_tech.transferrable.filter;
-
+@SuppressWarnings("unused")
 public class CompositeFilter<T> extends Filter<T> {
     public CompositeFilter(Filter<T> filter1, Filter<T> filter2, CompositeType type) {
         this.filter1 = filter1;

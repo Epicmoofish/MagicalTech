@@ -13,12 +13,10 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -142,21 +140,23 @@ public class MagicalTech implements ModInitializer {
                 LOGGER.info("Loading resource json values");
                 Map<ResourceLocation, Resource> map = manager.listResources("soul_burning", path -> path.getPath().equals("soul_burning/power_stored.json"));
                 for(ResourceLocation id : map.keySet()) {
-                    try(InputStream stream = manager.getResource(id).get().open()) {
-                        JsonElement jsonElement = readJson(stream);
-                        JsonObject obj = jsonElement.getAsJsonObject();
-                        Set<String> keyset = obj.keySet();
-                        for (String key : keyset) {
-                            try {
-                                ResourceLocation iden = ResourceLocation.tryParse(key);
-                                Item item = BuiltInRegistries.ITEM.get(iden);
-                                SoulBurningMap.put(item, obj.get(key).getAsLong());
-                            } catch (Exception e) {
-                                LOGGER.error("Key is not a valid identifier: " + key);
+                    if (manager.getResource(id).isPresent()) {
+                        try (InputStream stream = manager.getResource(id).get().open()) {
+                            JsonElement jsonElement = readJson(stream);
+                            JsonObject obj = jsonElement.getAsJsonObject();
+                            Set<String> keyset = obj.keySet();
+                            for (String key : keyset) {
+                                try {
+                                    ResourceLocation iden = ResourceLocation.tryParse(key);
+                                    Item item = BuiltInRegistries.ITEM.get(iden);
+                                    SoulBurningMap.put(item, obj.get(key).getAsLong());
+                                } catch (Exception e) {
+                                    LOGGER.error("Key is not a valid identifier: " + key);
+                                }
                             }
+                        } catch (Exception e) {
+                            LOGGER.error("Error occurred while loading resource json" + id.toString(), e);
                         }
-                    } catch(Exception e) {
-                        LOGGER.error("Error occurred while loading resource json" + id.toString(), e);
                     }
                 }
             }

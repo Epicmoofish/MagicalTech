@@ -21,8 +21,6 @@ import org.oceanic.magical_tech.blocks.pipes.tileentities.EnergyPipeConnectionTE
 import org.oceanic.magical_tech.data_structures.Mutable;
 import org.oceanic.magical_tech.data_structures.PriorityHolders;
 import org.oceanic.magical_tech.items.WrenchItem;
-import org.oceanic.magical_tech.transferrable.DSTransfer;
-import org.oceanic.magical_tech.transferrable.Transferable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -85,11 +83,7 @@ public class EnergyPipeConnection extends AbstractPipeConnection {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, MagicalTech.ENERGY_PIPE_TILE_ENTITY, (world1, pos, state1, be) -> EnergyPipeConnectionTE.tick(world1, pos, state1, be));
-    }
-    @Override
-    public List<Transferable<?>> getTransferTypes() {
-        return List.of(new DSTransfer());
+        return createTickerHelper(type, MagicalTech.ENERGY_PIPE_TILE_ENTITY, EnergyPipeConnectionTE::tick);
     }
     private void populateExportersAndImporters(Level world, List<BlockPos> positions, List<PriorityHolders<SouliumHolder>> exporters, List<PriorityHolders<SouliumHolder>> importers) {
         for (BlockPos posi : positions) {
@@ -118,7 +112,7 @@ public class EnergyPipeConnection extends AbstractPipeConnection {
         exporters.sort(Comparator.comparingInt(x -> -x.priority));
         importers.sort(Comparator.comparingInt(x -> -x.priority));
     }
-
+    @SuppressWarnings("deprecation")
     @Nullable
     @Override
     public MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) {
@@ -127,7 +121,7 @@ public class EnergyPipeConnection extends AbstractPipeConnection {
         }
         return super.getMenuProvider(blockState, level, blockPos);
     }
-
+    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (!(player.getItemInHand(interactionHand).getItem() instanceof WrenchItem)) {
@@ -150,9 +144,7 @@ public class EnergyPipeConnection extends AbstractPipeConnection {
             if (pos2.getX() < pos3.getX()) return 1;
             if (pos2.getY() > pos3.getY()) return -1;
             if (pos2.getY() < pos3.getY()) return 1;
-            if (pos2.getZ() > pos3.getZ()) return -1;
-            if (pos2.getZ() < pos3.getZ()) return 1;
-            return 0;
+            return Integer.compare(pos3.getZ(), pos2.getZ());
         });
         if (positions.get(0) != pos) return;
         List<PriorityHolders<SouliumHolder>> exporters = new ArrayList<>();

@@ -1,21 +1,16 @@
 package org.oceanic.magical_tech.menus;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
-import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import org.oceanic.magical_tech.MagicalTech;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHandler> {

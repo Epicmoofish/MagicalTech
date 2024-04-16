@@ -1,10 +1,7 @@
 package org.oceanic.magical_tech.client;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import org.oceanic.magical_tech.MagicalTech;
 import org.oceanic.magical_tech.menus.EnergyPipeScreen;
 

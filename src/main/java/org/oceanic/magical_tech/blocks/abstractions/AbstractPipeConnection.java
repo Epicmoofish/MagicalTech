@@ -21,14 +21,12 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.oceanic.magical_tech.MagicalTech;
-import org.oceanic.magical_tech.transferrable.Transferable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static net.minecraft.world.level.block.BaseEntityBlock.createTickerHelper;
 
 public abstract class AbstractPipeConnection extends AbstractPipe implements EntityBlock {
     public static final IntegerProperty CONNECTION_UP = IntegerProperty.create("connection_up", 0, 2);
@@ -294,7 +292,5 @@ public abstract class AbstractPipeConnection extends AbstractPipe implements Ent
         }
         return connections;
     }
-
-    public abstract List<Transferable<?>> getTransferTypes();
     public abstract void doExports(BlockPos pos, Level world);
 }

@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.oceanic.magical_tech.MagicalTech;
 import org.oceanic.magical_tech.blocks.abstractions.SouliumBlock;
-import org.oceanic.magical_tech.blocks.abstractions.SouliumHolder;
 import org.oceanic.magical_tech.blocks.tileentities.CrudeSouliumGeneratorTE;
 
 import static net.minecraft.world.level.block.BaseEntityBlock.createTickerHelper;
@@ -25,7 +24,7 @@ public class CrudeSouliumGenerator extends SouliumBlock implements EntityBlock {
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new CrudeSouliumGeneratorTE(pos, state);
     }
-
+    @SuppressWarnings("deprecation")
     @Override
     public RenderShape getRenderShape(BlockState state) {
         // With inheriting from BlockWithEntity this defaults to INVISIBLE, so we need to change that!
@@ -33,15 +32,6 @@ public class CrudeSouliumGenerator extends SouliumBlock implements EntityBlock {
     }
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, MagicalTech.CRUDE_GENERATOR_TILE_ENTITY, (world1, pos, state1, be) -> CrudeSouliumGeneratorTE.tick(world1, pos, state1, be));
-    }
-
-    @Override
-    public SouliumHolder getSouliumHolder(BlockPos pos, Level world) {
-        BlockEntity ent = world.getBlockEntity(pos);
-        if (ent instanceof SouliumHolder) {
-            return (SouliumHolder) ent;
-        }
-        return null;
+        return createTickerHelper(type, MagicalTech.CRUDE_GENERATOR_TILE_ENTITY, CrudeSouliumGeneratorTE::tick);
     }
 }

@@ -2,8 +2,6 @@ package org.oceanic.magical_tech.blocks.abstractions;
 
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.annotation.Nullable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -11,16 +9,10 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.oceanic.magical_tech.MagicalTech;
-import org.oceanic.magical_tech.blocks.abstractions.AbstractPipeConnection;
-import org.oceanic.magical_tech.blocks.abstractions.SouliumHolder;
 
 public abstract class AbstractPipeConnectionTE extends BlockEntity implements MenuProvider, ExtendedScreenHandlerFactory {
     public int exportingUp = 0;
@@ -115,7 +107,7 @@ public abstract class AbstractPipeConnectionTE extends BlockEntity implements Me
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
     }
-    public static void tick(Level world, BlockPos pos, BlockState state, AbstractPipeConnectionTE blockEntity) {
+    public static void tick(Level world, BlockPos pos, BlockState state, AbstractPipeConnectionTE ignored) {
         if (state.getBlock() instanceof AbstractPipeConnection conn) {
             conn.doExports(pos, world);
         }

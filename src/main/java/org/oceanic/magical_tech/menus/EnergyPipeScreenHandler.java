@@ -1,7 +1,5 @@
 package org.oceanic.magical_tech.menus;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -13,7 +11,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import org.oceanic.magical_tech.MagicalTech;
 import org.oceanic.magical_tech.blocks.pipes.tileentities.EnergyPipeConnectionTE;
-import org.oceanic.magical_tech.client.MagicalTechClient;
 
 public class EnergyPipeScreenHandler extends AbstractContainerMenu {
     private final Container inventory;
@@ -29,7 +26,7 @@ public class EnergyPipeScreenHandler extends AbstractContainerMenu {
     private int ioSouth = 0;
     private int ioWest = 0;
     private int ioEast = 0;
-    private Component[] directionNames = new Component[6];
+    private final Component[] directionNames = new Component[6];
     //This constructor gets called on the client when the server wants it to open the screenHandler,
     //The client will call the other constructor with an empty Inventory and the screenHandler will automatically
     //sync this empty inventory with the inventory on the server.

@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -142,13 +141,16 @@ public abstract class AbstractPipe extends Block {
     public abstract BlockState getWrenchedState(BlockState oldState, Direction direction, BlockPos pos, Level world);
 
     protected abstract List<Class<? extends AbstractPipe>> getConnectable();
+    @SuppressWarnings("deprecation")
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
+    @SuppressWarnings("deprecation")
     public void neighborChangedSuperer(BlockState blockState, Level level, BlockPos blockPos, Block blockOld, BlockPos blockPos2, boolean bl) {
         super.neighborChanged(blockState, level, blockPos, blockOld, blockPos2, bl);
     }
+    @SuppressWarnings("deprecation")
     @Override
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block blockOld, BlockPos blockPos2, boolean bl) {
         Direction dir = MagicalTech.relativeDirection(blockPos, blockPos2);
@@ -202,7 +204,7 @@ public abstract class AbstractPipe extends Block {
         super.neighborChanged(blockState, level, blockPos, blockOld, blockPos2, bl);
     }
 
-
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         Vec3 start = new Vec3(0.35, 0.35, 0.35);
