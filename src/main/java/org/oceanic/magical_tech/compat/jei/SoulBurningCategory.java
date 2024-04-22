@@ -50,6 +50,7 @@ public class SoulBurningCategory implements IRecipeCategory<SoulBurningRecipe> {
     protected IDrawableAnimated getArrow(SoulBurningRecipe recipeHolder) {
         long burnTime = recipeHolder.getAmount();
         burnTime = burnTime / 10;
+        if (burnTime < 2) burnTime = 2;
         burnTime = Math.min(burnTime, 500);
         int burnTimeInt = (int) burnTime;
         return this.cachedArrows.getUnchecked(burnTimeInt);

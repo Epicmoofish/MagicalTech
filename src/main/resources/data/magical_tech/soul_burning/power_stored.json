@@ -1,7 +1,7 @@
 {
-  "minecraft:soul_sand": 1000,
-  "minecraft:soul_soil": 1000,
-  "minecraft:soul_torch": 400,
-  "minecraft:soul_campfire": 400,
-  "minecraft:soul_lantern": 400
+  "minecraft:soul_sand": 10000,
+  "minecraft:soul_soil": 10000,
+  "minecraft:soul_torch": 4000,
+  "minecraft:soul_campfire": 4000,
+  "minecraft:soul_lantern": 4000
 }

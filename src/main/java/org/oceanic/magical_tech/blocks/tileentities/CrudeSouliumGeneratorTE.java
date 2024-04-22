@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.oceanic.magical_tech.MagicalTech;
 import org.oceanic.magical_tech.blocks.abstractions.SouliumHolder;
 import org.oceanic.magical_tech.soul_burning.SoulBurningMap;
+import org.oceanic.magical_tech.util.ExtraMath;
 
 import java.util.ArrayList;
 
@@ -25,11 +26,11 @@ public class CrudeSouliumGeneratorTE extends BlockEntity implements SouliumHolde
     private long soulium = 0;
     private long burnLeft = 0;
     private ItemStack stack = ItemStack.EMPTY;
-    private static final long souliumPerTick = 1;
+    private static final long souliumPerTick = 10;
     public long getBurnLeft() {
         return burnLeft;
     }
-    private static final long maxSoulium = 10000;
+    private static final long maxSoulium = 100000;
     public CrudeSouliumGeneratorTE(BlockPos pos, BlockState state) {
         super(MagicalTech.CRUDE_GENERATOR_TILE_ENTITY, pos, state);
     }
@@ -78,24 +79,38 @@ public class CrudeSouliumGeneratorTE extends BlockEntity implements SouliumHolde
         return saveWithoutMetadata();
     }
     public static void tick(Level world, BlockPos pos, BlockState state, CrudeSouliumGeneratorTE blockEntity) {
-        if (blockEntity.burnLeft == 0) {
-            if (!blockEntity.getItem(0).isEmpty()) {
-                long burnTime = SoulBurningMap.get(blockEntity.getItem(0).getItem());
-                if (burnTime != -1) {
-                    blockEntity.getItem(0).shrink(1);
-                    blockEntity.burnLeft = burnTime;
-                }
-            }
-        }
-        long burned_soulium = blockEntity.burnLeft;
-        if (burned_soulium > souliumPerTick) {
-            burned_soulium = souliumPerTick;
-        }
+        long burned_soulium = souliumPerTick;
         if (blockEntity.soulium + burned_soulium > maxSoulium) {
             burned_soulium = maxSoulium - blockEntity.soulium;
         }
-        blockEntity.soulium = blockEntity.soulium + burned_soulium;
-        blockEntity.burnLeft = blockEntity.burnLeft - burned_soulium;
+        long total_created;
+        if (blockEntity.burnLeft >= burned_soulium) {
+            blockEntity.burnLeft -= burned_soulium;
+            total_created = burned_soulium;
+            burned_soulium = 0;
+        } else {
+            total_created = blockEntity.burnLeft;
+            burned_soulium -= blockEntity.burnLeft;
+            blockEntity.burnLeft = 0;
+        }
+        if (burned_soulium != 0) {
+            if (!blockEntity.getItem(0).isEmpty()) {
+                long soulium_in_item = SoulBurningMap.get(blockEntity.getItem(0).getItem());
+                long count = blockEntity.getItem(0).getCount();
+                long totalUsed = ExtraMath.ceilDivision(burned_soulium, soulium_in_item);
+                totalUsed = Math.min(totalUsed, count);
+                long burnNum = soulium_in_item * totalUsed;
+                blockEntity.getItem(0).shrink((int)totalUsed);
+                if (burnNum >= burned_soulium) {
+                    blockEntity.burnLeft = burnNum - burned_soulium;
+                    total_created += burned_soulium;
+                } else {
+                    total_created += burnNum;
+                }
+
+            }
+        }
+        blockEntity.soulium = blockEntity.soulium + total_created;
         CrudeSouliumGeneratorTE.setChanged(world, pos, state);
         world.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
     }

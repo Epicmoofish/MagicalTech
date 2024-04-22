@@ -77,8 +77,8 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
             for (String x : splitString(blockLabel)) {
                 
                 guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate((float) (k + ((directionSpacing * (i + 1) + directionWidth * i) + (directionWidth - font.width(x)/2.0) / 2.0)), (float) l + blockLabelCenter + currentHeight, 0.0F);
-                float scale = 0.5f;
+                guiGraphics.pose().translate((float) (k + ((directionSpacing * (i + 1) + directionWidth * i) + (directionWidth - font.width(x)/2.0/1.25) / 2.0/1.25)), (float) l + blockLabelCenter + currentHeight, 0.0F);
+                float scale = 0.5f/1.25f;
                 int height = font.lineHeight;
 
                 guiGraphics.pose().scale(scale, scale, scale);
@@ -115,7 +115,7 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
             String str = "";
             for (int i = 0; i<s.length(); i++) {
                 String stro = str + s.charAt(i);
-                if (font.width(stro) > 52) {
+                if (font.width(stro) > 65) {
                     s2.add(str);
                     str = s.charAt(i) + "";
                 } else {
