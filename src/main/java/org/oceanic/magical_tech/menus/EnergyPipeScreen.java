@@ -1,10 +1,15 @@
 package org.oceanic.magical_tech.menus;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,8 +26,17 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
     private static final float directionPriorityCenter = 35.5f;
     private static final int directionSpacing = 14;
     private static final int directionLabelCenter = 20;
-    private static final int blockLabelCenter = 63;
+    private static final int blockLabelCenter = 65;
     private static final int directionIOCenter = 54;
+    private static final int squareStart = 14;
+    private static final int squareY = 50;
+    private static final int squareSize = 13;
+    private static final int squareNext = 27;
+
+
+    private static final int downArrowY = 42;
+    private static final int arrowHeight = 7;
+    private static final int upArrowY = 25;
 
     public EnergyPipeScreen(EnergyPipeScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
@@ -43,8 +57,41 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
     }
 
     @Override
-    public boolean mouseClicked(double d, double e, int i) {
-        return super.mouseClicked(d, e, i);
+    public boolean mouseClicked(double d, double e, int i2) {
+        for (int i = 0; i < 6; i++) {
+            Direction dir = Direction.values()[i];
+            if (this.isHovering(squareStart + squareNext * i, squareY, squareSize, squareSize, d, e)) {
+                this.menu.modifyIo(dir);
+            }
+            if (this.isHovering(squareStart + squareNext * i, downArrowY, squareSize, arrowHeight, d, e)) {
+                this.menu.addPriority(dir, Screen.hasShiftDown() ? -10 : -1);
+            }
+            if (this.isHovering(squareStart + squareNext * i, upArrowY, squareSize, arrowHeight, d, e)) {
+                this.menu.addPriority(dir, Screen.hasShiftDown() ? 10 : 1);
+            }
+        }
+        return super.mouseClicked(d, e, i2);
+    }
+
+    @Override
+    public void onClose() {
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        buf.writeBlockPos(this.menu.blockPos);
+        buf.writeInt(this.menu.getPriority(Direction.UP));
+        buf.writeInt(this.menu.getPriority(Direction.DOWN));
+        buf.writeInt(this.menu.getPriority(Direction.NORTH));
+        buf.writeInt(this.menu.getPriority(Direction.SOUTH));
+        buf.writeInt(this.menu.getPriority(Direction.EAST));
+        buf.writeInt(this.menu.getPriority(Direction.WEST));
+
+        buf.writeInt(this.menu.getIoValue(Direction.UP));
+        buf.writeInt(this.menu.getIoValue(Direction.DOWN));
+        buf.writeInt(this.menu.getIoValue(Direction.NORTH));
+        buf.writeInt(this.menu.getIoValue(Direction.SOUTH));
+        buf.writeInt(this.menu.getIoValue(Direction.EAST));
+        buf.writeInt(this.menu.getIoValue(Direction.WEST));
+        ClientPlayNetworking.send(MagicalTech.ENERGY_PIPE_PACKET, buf);
+        super.onClose();
     }
 
     @Override
@@ -55,6 +102,20 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
         int l = this.topPos;
         RenderSystem.disableDepthTest();
         Direction[] directions = Direction.values();
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate((float)k, (float)l, 0.0F);
+        for (int i = 0; i < 6; i++) {
+            if (this.isHovering(squareStart + squareNext * i, squareY, squareSize, squareSize, mouseX, mouseY)) {
+                guiGraphics.fillGradient(RenderType.guiOverlay(), squareStart + squareNext * i, squareY, squareStart + squareNext * i + squareSize, squareY + squareSize, 0x8000d5ff, 0x8000d5ff, 0);
+            }
+            if (this.isHovering(squareStart + squareNext * i, downArrowY, squareSize, arrowHeight, mouseX, mouseY)) {
+                guiGraphics.fillGradient(RenderType.guiOverlay(), squareStart + squareNext * i, downArrowY, squareStart + squareNext * i + squareSize, downArrowY + arrowHeight, 0x8000d5ff, 0x8000d5ff, 0);
+            }
+            if (this.isHovering(squareStart + squareNext * i, upArrowY, squareSize, arrowHeight, mouseX, mouseY)) {
+                guiGraphics.fillGradient(RenderType.guiOverlay(), squareStart + squareNext * i, upArrowY, squareStart + squareNext * i + squareSize, upArrowY + arrowHeight, 0x8000d5ff, 0x8000d5ff, 0);
+            }
+        }
+        guiGraphics.pose().popPose();
         for (int i = 0; i < directions.length; i++) {
             Direction dir = directions[i];
             String priority = this.menu.priorityFor(dir);
@@ -89,7 +150,6 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
             }
         }
         for (int i = 0; i < directions.length; i++) {
-
             guiGraphics.pose().pushPose();
             Direction dir = directions[i];
             String priority = this.menu.ioFor(dir);

@@ -48,6 +48,7 @@ public class EnergyPipeConnectionTE extends AbstractPipeConnectionTE {
         byteBuf.writeInt(exportingSouth);
         byteBuf.writeInt(exportingWest);
         byteBuf.writeInt(exportingEast);
+        byteBuf.writeBlockPos(this.getBlockPos());
         for (Direction dir : Direction.values()) {
             if (this.level != null) byteBuf.writeComponent(this.level.getBlockState(this.getBlockPos().relative(dir)).getBlock().getName());
         }

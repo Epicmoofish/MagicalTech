@@ -8,6 +8,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -60,7 +61,7 @@ public class MagicalTech implements ModInitializer {
     public static final Block SOULIUM_BATTERY  = new SouliumBattery(FabricBlockSettings.create().strength(4.0f));
     public static final Block ENERGY_PIPE  = new EnergyPipe(FabricBlockSettings.create().strength(4.0f));
     public static final Block ENERGY_PIPE_CONNECTION  = new EnergyPipeConnection(FabricBlockSettings.create().strength(4.0f));
-
+    public static final ResourceLocation ENERGY_PIPE_PACKET = new ResourceLocation(MOD_ID, "energy_pipe_packet");
     public static final MenuType<EnergyPipeScreenHandler> ENERGY_PIPE_MENU = new ExtendedScreenHandlerType<>(EnergyPipeScreenHandler::new);
 
     private static final CreativeModeTab MAGICAL_TECH = FabricItemGroup.builder()
@@ -164,6 +165,34 @@ public class MagicalTech implements ModInitializer {
         registerBlocks();
         registerItems();
         registerGroups();
+        ServerPlayNetworking.registerGlobalReceiver(ENERGY_PIPE_PACKET, (server, player, handler, buf, responseSender) -> {
+            BlockPos pos = buf.readBlockPos();
+            int[] io = new int[6];
+            int[] priority = new int[6];
+            for (int i = 0; i < 6; i++) {
+                priority[i] = buf.readInt();
+            }
+            for (int i = 0; i < 6; i++) {
+                io[i] = buf.readInt();
+            }
+            server.execute(() -> {
+                if (player.level().getBlockEntity(pos) instanceof EnergyPipeConnectionTE te) {
+                    te.exportingUp = io[0];
+                    te.exportingDown = io[1];
+                    te.exportingNorth = io[2];
+                    te.exportingSouth = io[3];
+                    te.exportingEast = io[4];
+                    te.exportingWest = io[5];
+                    te.priorityUp = priority[0];
+                    te.priorityDown = priority[1];
+                    te.priorityNorth = priority[2];
+                    te.prioritySouth = priority[3];
+                    te.priorityEast = priority[4];
+                    te.priorityWest = priority[5];
+                    te.setChanged();
+                }
+            });
+        });
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(MOD_ID, "energy_pipe"), ENERGY_PIPE_MENU);
     }
     public void registerGroups() {

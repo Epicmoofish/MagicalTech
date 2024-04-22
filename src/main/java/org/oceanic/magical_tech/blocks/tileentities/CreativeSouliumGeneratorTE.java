@@ -37,7 +37,6 @@ public class CreativeSouliumGeneratorTE extends BlockEntity implements SouliumHo
     }
 
     @Override
-    public long removeSoulium(long amount) {
-        return amount;
+    public void removeSoulium(long amount) {
     }
 }

@@ -1,5 +1,6 @@
 package org.oceanic.magical_tech.menus;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -26,6 +27,7 @@ public class EnergyPipeScreenHandler extends AbstractContainerMenu {
     private int ioSouth = 0;
     private int ioWest = 0;
     private int ioEast = 0;
+    public BlockPos blockPos;
     private final Component[] directionNames = new Component[6];
     //This constructor gets called on the client when the server wants it to open the screenHandler,
     //The client will call the other constructor with an empty Inventory and the screenHandler will automatically
@@ -44,6 +46,7 @@ public class EnergyPipeScreenHandler extends AbstractContainerMenu {
         this.ioSouth = te.exportingSouth;
         this.ioWest = te.exportingWest;
         this.ioEast = te.exportingEast;
+        this.blockPos = te.getBlockPos();
         int i = 0;
         for (Direction dir : Direction.values()) {
             if (te.getLevel() != null) directionNames[i] = (te.getLevel().getBlockState(te.getBlockPos().relative(dir)).getBlock().getName());
@@ -64,6 +67,7 @@ public class EnergyPipeScreenHandler extends AbstractContainerMenu {
         this.ioSouth = byteBuf.readInt();
         this.ioWest = byteBuf.readInt();
         this.ioEast = byteBuf.readInt();
+        this.blockPos = byteBuf.readBlockPos();
         int i = 0;
         for (Direction ignored : Direction.values()) {
             directionNames[i] = byteBuf.readComponent();
@@ -90,7 +94,16 @@ public class EnergyPipeScreenHandler extends AbstractContainerMenu {
         if (dir == Direction.WEST) return String.valueOf(priorityWest);
         return "";
     }
-    private int getIoValue(Direction dir) {
+    public int getPriority(Direction dir) {
+        if (dir == Direction.UP) return priorityUp;
+        if (dir == Direction.DOWN) return priorityDown;
+        if (dir == Direction.NORTH) return priorityNorth;
+        if (dir == Direction.SOUTH) return prioritySouth;
+        if (dir == Direction.EAST) return priorityEast;
+        if (dir == Direction.WEST) return priorityWest;
+        return -1;
+    }
+    public int getIoValue(Direction dir) {
         if (dir == Direction.UP) return ioUp;
         if (dir == Direction.DOWN) return ioDown;
         if (dir == Direction.NORTH) return ioNorth;
@@ -98,6 +111,22 @@ public class EnergyPipeScreenHandler extends AbstractContainerMenu {
         if (dir == Direction.EAST) return ioEast;
         if (dir == Direction.WEST) return ioWest;
         return 0;
+    }
+    public void modifyIo(Direction dir) {
+        if (dir == Direction.UP) ioUp = (ioUp + 1) % 4;
+        if (dir == Direction.DOWN) ioDown = (ioDown + 1) % 4;
+        if (dir == Direction.NORTH) ioNorth = (ioNorth + 1) % 4;
+        if (dir == Direction.SOUTH) ioSouth = (ioSouth + 1) % 4;
+        if (dir == Direction.EAST) ioEast = (ioEast + 1) % 4;
+        if (dir == Direction.WEST) ioWest = (ioWest + 1) % 4;
+    }
+    public void addPriority(Direction dir, int k) {
+        if (dir == Direction.UP) priorityUp += k;
+        if (dir == Direction.DOWN) priorityDown += k;
+        if (dir == Direction.NORTH) priorityNorth += k;
+        if (dir == Direction.SOUTH) prioritySouth += k;
+        if (dir == Direction.EAST) priorityEast += k;
+        if (dir == Direction.WEST) priorityWest += k;
     }
     public Component getNameOf(Direction dir) {
         int i = 0;

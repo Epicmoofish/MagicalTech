@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.oceanic.magical_tech.MagicalTech;
@@ -52,7 +53,7 @@ public class SouliumBatteryTE extends BlockEntity implements SouliumHolder {
     }
 
     @Override
-    public long removeSoulium(long amount) {
+    public void removeSoulium(long amount) {
         if (amount + getSoulium() > getMaxSoulium()) {
             amount = getMaxSoulium() - getSoulium();
         }
@@ -60,6 +61,9 @@ public class SouliumBatteryTE extends BlockEntity implements SouliumHolder {
             amount = getSoulium();
         }
         soulium = soulium - amount;
-        return amount;
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        }
     }
 }

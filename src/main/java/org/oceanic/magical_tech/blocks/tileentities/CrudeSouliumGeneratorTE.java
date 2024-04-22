@@ -116,15 +116,18 @@ public class CrudeSouliumGeneratorTE extends BlockEntity implements SouliumHolde
     }
 
     @Override
-    public long removeSoulium(long amount) {
+    public void removeSoulium(long amount) {
         if (amount < 0) {
-            return 0;
+            return;
         }
         if (amount > getSoulium()) {
             amount = getSoulium();
         }
         soulium = soulium - amount;
-        return amount;
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        }
     }
 
     @Override

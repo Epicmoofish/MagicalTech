@@ -9,8 +9,8 @@ public interface SouliumHolder {
     default long getImporting() {
         return getMaxSoulium() - getSoulium();
     }
-    long removeSoulium(long amount);
-    default long addSoulium(long amount) {
-        return removeSoulium(-amount);
+    void removeSoulium(long amount);
+    default void addSoulium(long amount) {
+        removeSoulium(-amount);
     }
 }
