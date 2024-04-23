@@ -31,6 +31,9 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
     public long getBurnLeft() {
         return burnLeft;
     }
+    public long getCurrentMult() {
+        return currentMult;
+    }
     public static BlockEntityType<? extends AbstractSouliumGeneratorTE> getTypeOf() {
         return null;
     }
@@ -86,7 +89,6 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
         return saveWithoutMetadata();
     }
     public static void tick(Level world, BlockPos pos, BlockState state, AbstractSouliumGeneratorTE blockEntity) {
-        MagicalTech.LOGGER.info("I am the tickster");
         long burned_soulium = blockEntity.souliumPerTick * blockEntity.currentMult;
         if (blockEntity.soulium + burned_soulium > maxSoulium) {
             burned_soulium = maxSoulium - blockEntity.soulium;

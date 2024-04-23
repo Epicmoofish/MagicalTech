@@ -13,6 +13,8 @@
   "magical_tech.soulium_provider": "DS: %d%% (%s/%s)",
   "magical_tech.soul_burntime.error": "An error occurred while loading the Soulium Power Remaining",
   "magical_tech.soul_burntime": "Undistilled Soul: %s DS",
+  "magical_tech.soul_mult.error": "An error occurred while loading the Soulium Multiplier",
+  "magical_tech.soul_mult": "%dx Speed",
   "magical_tech.soul_burning_recipes.title": "Soul Distilling",
   "itemGroup.magical_tech.magical_tech": "Magical Tech",
   "direction.down": "Down",

@@ -24,6 +24,11 @@ public enum SoulBurning implements IBlockComponentProvider {
         } else {
             tooltip.add(Component.translatable(MagicalTech.MOD_ID + ".soulium_burntime_error"));
         }
+        if (accessor.getBlockEntity() instanceof AbstractSouliumGeneratorTE holder) {
+            tooltip.add(Component.translatable(MagicalTech.MOD_ID + ".soul_mult", holder.getCurrentMult()));
+        } else {
+            tooltip.add(Component.translatable(MagicalTech.MOD_ID + ".soulium_mult_error"));
+        }
     }
     @Override
     public ResourceLocation getUid() {

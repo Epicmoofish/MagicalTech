@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.oceanic.magical_tech.MagicalTech;
 import org.oceanic.magical_tech.blocks.abstractions.SouliumBlock;
 import org.oceanic.magical_tech.blocks.abstractions.AbstractSouliumGeneratorTE;
 
@@ -41,7 +40,6 @@ public class AbstractSouliumGenerator<Q extends AbstractSouliumGeneratorTE> exte
     @SuppressWarnings("unchecked")
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        MagicalTech.LOGGER.info("Hello from ticker getter");
         try {
             Object j = clazz.getMethod("getTypeOf").invoke(null);
             BlockEntityType<Q> typeOf = (BlockEntityType<Q>) j;
