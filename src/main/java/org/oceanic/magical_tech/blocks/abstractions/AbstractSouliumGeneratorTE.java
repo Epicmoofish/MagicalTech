@@ -37,10 +37,11 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
     public static BlockEntityType<? extends AbstractSouliumGeneratorTE> getTypeOf() {
         return null;
     }
-    private static final long maxSoulium = 100000;
-    public AbstractSouliumGeneratorTE(BlockEntityType<?> type, BlockPos pos, BlockState state, long souliumPerTick) {
+    private final long maxSoulium;
+    public AbstractSouliumGeneratorTE(BlockEntityType<?> type, BlockPos pos, BlockState state, long souliumPerTick, long maxSoulium) {
         super(type, pos, state);
         this.souliumPerTick = souliumPerTick;
+        this.maxSoulium = maxSoulium;
     }
 
     @Override
@@ -90,8 +91,8 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
     }
     public static void tick(Level world, BlockPos pos, BlockState state, AbstractSouliumGeneratorTE blockEntity) {
         long burned_soulium = blockEntity.souliumPerTick * blockEntity.currentMult;
-        if (blockEntity.soulium + burned_soulium > maxSoulium) {
-            burned_soulium = maxSoulium - blockEntity.soulium;
+        if (blockEntity.soulium + burned_soulium > blockEntity.maxSoulium) {
+            burned_soulium = blockEntity.maxSoulium - blockEntity.soulium;
         }
         long total_created;
         if (blockEntity.burnLeft >= burned_soulium) {

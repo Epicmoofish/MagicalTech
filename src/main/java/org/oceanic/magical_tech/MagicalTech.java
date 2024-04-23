@@ -34,6 +34,7 @@ import org.oceanic.magical_tech.blocks.SouliumBattery;
 import org.oceanic.magical_tech.blocks.pipes.EnergyPipe;
 import org.oceanic.magical_tech.blocks.pipes.EnergyPipeConnection;
 import org.oceanic.magical_tech.blocks.pipes.tileentities.EnergyPipeConnectionTE;
+import org.oceanic.magical_tech.blocks.tileentities.AdvancedSouliumTE;
 import org.oceanic.magical_tech.blocks.tileentities.CreativeSouliumGeneratorTE;
 import org.oceanic.magical_tech.blocks.tileentities.CrudeSouliumTE;
 import org.oceanic.magical_tech.blocks.tileentities.SouliumBatteryTE;
@@ -58,6 +59,7 @@ public class MagicalTech implements ModInitializer {
     public static final Item WRENCH  = new WrenchItem(new FabricItemSettings());
     public static final Block CREATIVE_SOULIUM_GENERATOR  = new CreativeSouliumGenerator(FabricBlockSettings.create().strength(4.0f));
     public static final Block CRUDE_SOULIUM_GENERATOR = new AbstractSouliumGenerator<>(FabricBlockSettings.create().strength(4.0f), CrudeSouliumTE.class);
+    public static final Block ADVANCED_SOULIUM_GENERATOR = new AbstractSouliumGenerator<>(FabricBlockSettings.create().strength(4.0f), AdvancedSouliumTE.class);
     public static final Block SOULIUM_BATTERY  = new SouliumBattery(FabricBlockSettings.create().strength(4.0f));
     public static final Block ENERGY_PIPE  = new EnergyPipe(FabricBlockSettings.create().strength(4.0f));
     public static final Block ENERGY_PIPE_CONNECTION  = new EnergyPipeConnection(FabricBlockSettings.create().strength(4.0f));
@@ -69,6 +71,7 @@ public class MagicalTech implements ModInitializer {
             .title(Component.translatable("itemGroup."+ MOD_ID + ".magical_tech"))
             .displayItems((context, entries) -> {
                 entries.accept(CRUDE_SOULIUM_GENERATOR);
+                entries.accept(ADVANCED_SOULIUM_GENERATOR);
                 entries.accept(CREATIVE_SOULIUM_GENERATOR);
                 entries.accept(SOULIUM_BATTERY);
                 entries.accept(ENERGY_PIPE);
@@ -84,6 +87,11 @@ public class MagicalTech implements ModInitializer {
             BuiltInRegistries.BLOCK_ENTITY_TYPE,
             new ResourceLocation(MOD_ID, "crude_soulium_block_entity"),
             FabricBlockEntityTypeBuilder.create(CrudeSouliumTE::new, CRUDE_SOULIUM_GENERATOR).build()
+    );
+    public static final BlockEntityType<AdvancedSouliumTE> ADVANCED_GENERATOR_TILE_ENTITY = Registry.register(
+            BuiltInRegistries.BLOCK_ENTITY_TYPE,
+            new ResourceLocation(MOD_ID, "advanced_soulium_block_entity"),
+            FabricBlockEntityTypeBuilder.create(AdvancedSouliumTE::new, ADVANCED_SOULIUM_GENERATOR).build()
     );
     public static final BlockEntityType<EnergyPipeConnectionTE> ENERGY_PIPE_TILE_ENTITY = Registry.register(
             BuiltInRegistries.BLOCK_ENTITY_TYPE,
@@ -222,6 +230,7 @@ public class MagicalTech implements ModInitializer {
     public void registerBlocks() {
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(MOD_ID, "creative_soulium_generator"), CREATIVE_SOULIUM_GENERATOR);
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(MOD_ID, "crude_soulium_generator"), CRUDE_SOULIUM_GENERATOR);
+        Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(MOD_ID, "advanced_soulium_generator"), ADVANCED_SOULIUM_GENERATOR);
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(MOD_ID, "energy_pipe"), ENERGY_PIPE);
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(MOD_ID, "energy_pipe_connection"), ENERGY_PIPE_CONNECTION);
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(MOD_ID, "soulium_battery"), SOULIUM_BATTERY);
@@ -230,6 +239,7 @@ public class MagicalTech implements ModInitializer {
         Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MOD_ID, "wrench"), WRENCH);
         Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MOD_ID, "creative_soulium_generator"), new BlockItem(CREATIVE_SOULIUM_GENERATOR, new FabricItemSettings()));
         Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MOD_ID, "crude_soulium_generator"), new BlockItem(CRUDE_SOULIUM_GENERATOR, new FabricItemSettings()));
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MOD_ID, "advanced_soulium_generator"), new BlockItem(ADVANCED_SOULIUM_GENERATOR, new FabricItemSettings()));
         Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MOD_ID, "energy_pipe"), new BlockItem(ENERGY_PIPE, new FabricItemSettings()));
         Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(MOD_ID, "soulium_battery"), new BlockItem(SOULIUM_BATTERY, new FabricItemSettings()));
     }
