@@ -29,13 +29,13 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.oceanic.magical_tech.blocks.CreativeSouliumGenerator;
-import org.oceanic.magical_tech.blocks.CrudeSouliumGenerator;
+import org.oceanic.magical_tech.blocks.AbstractSouliumGenerator;
 import org.oceanic.magical_tech.blocks.SouliumBattery;
 import org.oceanic.magical_tech.blocks.pipes.EnergyPipe;
 import org.oceanic.magical_tech.blocks.pipes.EnergyPipeConnection;
 import org.oceanic.magical_tech.blocks.pipes.tileentities.EnergyPipeConnectionTE;
 import org.oceanic.magical_tech.blocks.tileentities.CreativeSouliumGeneratorTE;
-import org.oceanic.magical_tech.blocks.tileentities.CrudeSouliumGeneratorTE;
+import org.oceanic.magical_tech.blocks.tileentities.CrudeSouliumTE;
 import org.oceanic.magical_tech.blocks.tileentities.SouliumBatteryTE;
 import org.oceanic.magical_tech.data_structures.Mutable;
 import org.oceanic.magical_tech.events.TickEventListener;
@@ -57,7 +57,7 @@ public class MagicalTech implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final Item WRENCH  = new WrenchItem(new FabricItemSettings());
     public static final Block CREATIVE_SOULIUM_GENERATOR  = new CreativeSouliumGenerator(FabricBlockSettings.create().strength(4.0f));
-    public static final Block CRUDE_SOULIUM_GENERATOR  = new CrudeSouliumGenerator(FabricBlockSettings.create().strength(4.0f));
+    public static final Block CRUDE_SOULIUM_GENERATOR = new AbstractSouliumGenerator<>(FabricBlockSettings.create().strength(4.0f), CrudeSouliumTE.class);
     public static final Block SOULIUM_BATTERY  = new SouliumBattery(FabricBlockSettings.create().strength(4.0f));
     public static final Block ENERGY_PIPE  = new EnergyPipe(FabricBlockSettings.create().strength(4.0f));
     public static final Block ENERGY_PIPE_CONNECTION  = new EnergyPipeConnection(FabricBlockSettings.create().strength(4.0f));
@@ -80,10 +80,10 @@ public class MagicalTech implements ModInitializer {
             new ResourceLocation(MOD_ID, "creative_soulium_block_entity"),
             FabricBlockEntityTypeBuilder.create(CreativeSouliumGeneratorTE::new, CREATIVE_SOULIUM_GENERATOR).build()
     );
-    public static final BlockEntityType<CrudeSouliumGeneratorTE> CRUDE_GENERATOR_TILE_ENTITY = Registry.register(
+    public static final BlockEntityType<CrudeSouliumTE> CRUDE_GENERATOR_TILE_ENTITY = Registry.register(
             BuiltInRegistries.BLOCK_ENTITY_TYPE,
             new ResourceLocation(MOD_ID, "crude_soulium_block_entity"),
-            FabricBlockEntityTypeBuilder.create(CrudeSouliumGeneratorTE::new, CRUDE_SOULIUM_GENERATOR).build()
+            FabricBlockEntityTypeBuilder.create(CrudeSouliumTE::new, CRUDE_SOULIUM_GENERATOR).build()
     );
     public static final BlockEntityType<EnergyPipeConnectionTE> ENERGY_PIPE_TILE_ENTITY = Registry.register(
             BuiltInRegistries.BLOCK_ENTITY_TYPE,
@@ -151,6 +151,27 @@ public class MagicalTech implements ModInitializer {
                                     ResourceLocation iden = ResourceLocation.tryParse(key);
                                     Item item = BuiltInRegistries.ITEM.get(iden);
                                     SoulBurningMap.put(item, obj.get(key).getAsLong());
+                                } catch (Exception e) {
+                                    LOGGER.error("Key is not a valid identifier: " + key);
+                                }
+                            }
+                        } catch (Exception e) {
+                            LOGGER.error("Error occurred while loading resource json" + id.toString(), e);
+                        }
+                    }
+                }
+                Map<ResourceLocation, Resource> map2 = manager.listResources("soul_burning", path -> path.getPath().equals("soul_burning/power_multiplier.json"));
+                for(ResourceLocation id : map2.keySet()) {
+                    if (manager.getResource(id).isPresent()) {
+                        try (InputStream stream = manager.getResource(id).get().open()) {
+                            JsonElement jsonElement = readJson(stream);
+                            JsonObject obj = jsonElement.getAsJsonObject();
+                            Set<String> keyset = obj.keySet();
+                            for (String key : keyset) {
+                                try {
+                                    ResourceLocation iden = ResourceLocation.tryParse(key);
+                                    Item item = BuiltInRegistries.ITEM.get(iden);
+                                    SoulBurningMap.putMult(item, obj.get(key).getAsLong());
                                 } catch (Exception e) {
                                     LOGGER.error("Key is not a valid identifier: " + key);
                                 }

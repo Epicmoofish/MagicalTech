@@ -2,7 +2,7 @@ package org.oceanic.magical_tech.compat.jade;
 
 import net.minecraft.resources.ResourceLocation;
 import org.oceanic.magical_tech.MagicalTech;
-import org.oceanic.magical_tech.blocks.CrudeSouliumGenerator;
+import org.oceanic.magical_tech.blocks.AbstractSouliumGenerator;
 import org.oceanic.magical_tech.blocks.abstractions.SouliumBlock;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
@@ -22,6 +22,6 @@ public class SouliumPlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(SouliumProvider.INSTANCE, SouliumBlock.class);
-        registration.registerBlockComponent(SoulBurning.INSTANCE, CrudeSouliumGenerator.class);
+        registration.registerBlockComponent(SoulBurning.INSTANCE, AbstractSouliumGenerator.class);
     }
 }

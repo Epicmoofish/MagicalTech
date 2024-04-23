@@ -49,6 +49,7 @@ public class SoulBurningCategory implements IRecipeCategory<SoulBurningRecipe> {
     }
     protected IDrawableAnimated getArrow(SoulBurningRecipe recipeHolder) {
         long burnTime = recipeHolder.getAmount();
+        burnTime /= recipeHolder.getMult();
         burnTime = burnTime / 10;
         if (burnTime < 2) burnTime = 2;
         burnTime = Math.min(burnTime, 500);
@@ -88,10 +89,14 @@ public class SoulBurningCategory implements IRecipeCategory<SoulBurningRecipe> {
         arrow.draw(guiGraphics, 24, 1);
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
-        poseStack.translate(55, 5, 0);
         Font font = Minecraft.getInstance().font;
         String text = ChatFormatting.DARK_PURPLE + MagicalTech.souliumString(recipe.burnAmount(), Screen.hasShiftDown()) + " DS";
+        poseStack.translate(90 - font.width(text) / 2.0, 0, 0);
         guiGraphics.drawString(font, text, 0, 0, 8, false);
+
+        String text2 = ChatFormatting.DARK_PURPLE + String.valueOf(recipe.getMult()) + "x Speed";
+        poseStack.translate((font.width(text)-font.width(text2)) / 2.0, 10, 0);
+        guiGraphics.drawString(font, text2, 0, 0, 8, false);
 
         poseStack.popPose();
     }

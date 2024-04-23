@@ -39,13 +39,17 @@ public class JEIPlugin implements IModPlugin {
         for (Item key: SoulBurningMap.getKeys()) {
             try {
                 long val = SoulBurningMap.get(key);
-                entries.add(new SoulBurningRecipe(key, val));
+                long mult = SoulBurningMap.getMult(key);
+                entries.add(new SoulBurningRecipe(key, val, mult));
             } catch (Exception e) {
                 MagicalTech.LOGGER.error("Failed to get key: " + key);
             }
         }
         entries.sort((o1, o2) -> {
             long val = o2.burnAmount() - o1.burnAmount();
+            long mult = o2.getMult() - o1.getMult();
+            if (mult > 0) return 1;
+            if (mult < 0) return -1;
             if (val == 0) return 0;
             if (val > 0) return 1;
             return -1;

@@ -11,18 +11,26 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.oceanic.magical_tech.MagicalTech;
 import org.oceanic.magical_tech.blocks.abstractions.SouliumBlock;
-import org.oceanic.magical_tech.blocks.tileentities.CrudeSouliumGeneratorTE;
+import org.oceanic.magical_tech.blocks.abstractions.AbstractSouliumGeneratorTE;
+
+import java.lang.reflect.InvocationTargetException;
 
 import static net.minecraft.world.level.block.BaseEntityBlock.createTickerHelper;
 
-public class CrudeSouliumGenerator extends SouliumBlock implements EntityBlock {
-    public CrudeSouliumGenerator(FabricBlockSettings settings) {
+public class AbstractSouliumGenerator<Q extends AbstractSouliumGeneratorTE> extends SouliumBlock implements EntityBlock {
+    private final Class<Q> clazz;
+    public AbstractSouliumGenerator(FabricBlockSettings settings, Class<Q> clazz) {
         super(settings);
+        this.clazz = clazz;
     }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CrudeSouliumGeneratorTE(pos, state);
+        try {
+            return clazz.getConstructor(BlockPos.class, BlockState.class).newInstance(pos, state);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
     @SuppressWarnings("deprecation")
     @Override
@@ -30,8 +38,16 @@ public class CrudeSouliumGenerator extends SouliumBlock implements EntityBlock {
         // With inheriting from BlockWithEntity this defaults to INVISIBLE, so we need to change that!
         return RenderShape.MODEL;
     }
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, MagicalTech.CRUDE_GENERATOR_TILE_ENTITY, CrudeSouliumGeneratorTE::tick);
+        MagicalTech.LOGGER.info("Hello from ticker getter");
+        try {
+            Object j = clazz.getMethod("getTypeOf").invoke(null);
+            BlockEntityType<Q> typeOf = (BlockEntityType<Q>) j;
+            return createTickerHelper(type, typeOf, AbstractSouliumGeneratorTE::tick);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
