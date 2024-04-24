@@ -7,6 +7,8 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 import org.oceanic.magical_tech.MagicalTech;
 
 public class SouliumGeneratorScreen extends AbstractContainerScreen<AbstractSouliumGeneratorScreenHandler> {
@@ -15,7 +17,7 @@ public class SouliumGeneratorScreen extends AbstractContainerScreen<AbstractSoul
 
     public SouliumGeneratorScreen(AbstractSouliumGeneratorScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
-        this.imageHeight = 85;
+        this.imageHeight = 300;
         this.imageWidth = 176;
     }
 
@@ -29,7 +31,10 @@ public class SouliumGeneratorScreen extends AbstractContainerScreen<AbstractSoul
         matrices.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
         //in 1.20 or above,this method is in DrawContext class.
     }
-
+    @Override
+    protected void slotClicked(Slot slot, int i, int j, ClickType clickType) {
+        super.slotClicked(slot, i, j, clickType);
+    }
     @Override
     public boolean mouseClicked(double d, double e, int i2) {
         return super.mouseClicked(d, e, i2);

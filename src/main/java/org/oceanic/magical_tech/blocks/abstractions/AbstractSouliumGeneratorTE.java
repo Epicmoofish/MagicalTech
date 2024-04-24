@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
@@ -20,7 +21,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.oceanic.magical_tech.MagicalTech;
@@ -31,7 +32,7 @@ import org.oceanic.magical_tech.util.ExtraMath;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements SouliumHolder, WorldlyContainer, MenuProvider, ExtendedScreenHandlerFactory {
+public abstract class AbstractSouliumGeneratorTE extends BaseContainerBlockEntity implements SouliumHolder, WorldlyContainer, MenuProvider, ExtendedScreenHandlerFactory {
     private long soulium = 0;
     private long burnLeft = 0;
     private long currentMult = 1;
@@ -63,7 +64,14 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
         nbt.put("stack", stack_comp);
         super.saveAdditional(nbt);
     }
-
+    @Override
+    public Component getDefaultName() {
+        return getDisplayName();
+    }
+    @Override
+    protected AbstractContainerMenu createMenu(int i, Inventory inventory) {
+        return createMenu(i, inventory, null);
+    }
     @Override
     public long getImporting() {
         return 0;
@@ -175,12 +183,18 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
     }
 
     @Override
+    public boolean stillValid(Player player) {
+        return Container.stillValidBlockEntity(this, player);
+    }
+
+    @Override
     public boolean canTakeItemThroughFace(int i, ItemStack itemStack, Direction direction) {
         return false;
     }
 
     @Override
     public void writeScreenOpeningData(ServerPlayer serverPlayerEntity, FriendlyByteBuf byteBuf) {
+
     }
     @Override
     public abstract Component getDisplayName();
@@ -189,7 +203,7 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         try {
-            return getMenuClass().getConstructor(int.class, Inventory.class, AbstractSouliumGeneratorTE.class).newInstance(i, inventory, this);
+            return getMenuClass().getConstructor(int.class, Inventory.class, Container.class).newInstance(i, inventory, this);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
@@ -202,7 +216,7 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return stack.isEmpty();
     }
 
     @Override
@@ -228,13 +242,8 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
     }
 
     @Override
-    public boolean stillValid(Player playerEntity) {
-        return false;
-    }
-
-    @Override
     public void clearContent() {
-
+        this.stack = ItemStack.EMPTY;
     }
 
     @Override
