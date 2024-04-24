@@ -31,6 +31,7 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(MagicalTech.CRUDE_SOULIUM_GENERATOR), SOUL_BURNING_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(MagicalTech.ADVANCED_SOULIUM_GENERATOR), SOUL_BURNING_TYPE);
     }
 
     @Override

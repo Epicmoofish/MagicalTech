@@ -41,7 +41,10 @@ import org.oceanic.magical_tech.blocks.tileentities.SouliumBatteryTE;
 import org.oceanic.magical_tech.data_structures.Mutable;
 import org.oceanic.magical_tech.events.TickEventListener;
 import org.oceanic.magical_tech.items.WrenchItem;
+import org.oceanic.magical_tech.menus.AdvancedSouliumGeneratorScreenHandler;
+import org.oceanic.magical_tech.menus.CrudeSouliumGeneratorScreenHandler;
 import org.oceanic.magical_tech.menus.EnergyPipeScreenHandler;
+import org.oceanic.magical_tech.menus.AbstractSouliumGeneratorScreenHandler;
 import org.oceanic.magical_tech.soul_burning.SoulBurningMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +68,8 @@ public class MagicalTech implements ModInitializer {
     public static final Block ENERGY_PIPE_CONNECTION  = new EnergyPipeConnection(FabricBlockSettings.create().strength(4.0f));
     public static final ResourceLocation ENERGY_PIPE_PACKET = new ResourceLocation(MOD_ID, "energy_pipe_packet");
     public static final MenuType<EnergyPipeScreenHandler> ENERGY_PIPE_MENU = new ExtendedScreenHandlerType<>(EnergyPipeScreenHandler::new);
+    public static final MenuType<AbstractSouliumGeneratorScreenHandler> CRUDE_GENERATOR_MENU = new ExtendedScreenHandlerType<>(CrudeSouliumGeneratorScreenHandler::new);
+    public static final MenuType<AbstractSouliumGeneratorScreenHandler> ADVANCED_GENERATOR_MENU = new ExtendedScreenHandlerType<>(AdvancedSouliumGeneratorScreenHandler::new);
 
     private static final CreativeModeTab MAGICAL_TECH = FabricItemGroup.builder()
             .icon(() -> new ItemStack(Items.SOUL_CAMPFIRE))
@@ -223,6 +228,8 @@ public class MagicalTech implements ModInitializer {
             });
         });
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(MOD_ID, "energy_pipe"), ENERGY_PIPE_MENU);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(MOD_ID, "crude_generator"), CRUDE_GENERATOR_MENU);
+        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(MOD_ID, "advanced_generator"), ADVANCED_GENERATOR_MENU);
     }
     public void registerGroups() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(MOD_ID, "magical_tech"), MAGICAL_TECH);

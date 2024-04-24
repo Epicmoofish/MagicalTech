@@ -1,15 +1,22 @@
 package org.oceanic.magical_tech.blocks.abstractions;
 
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.annotation.Nullable;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -17,12 +24,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.oceanic.magical_tech.MagicalTech;
+import org.oceanic.magical_tech.menus.AbstractSouliumGeneratorScreenHandler;
 import org.oceanic.magical_tech.soul_burning.SoulBurningMap;
 import org.oceanic.magical_tech.util.ExtraMath;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements SouliumHolder, WorldlyContainer {
+public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements SouliumHolder, WorldlyContainer, MenuProvider, ExtendedScreenHandlerFactory {
     private long soulium = 0;
     private long burnLeft = 0;
     private long currentMult = 1;
@@ -170,6 +179,22 @@ public abstract class AbstractSouliumGeneratorTE extends BlockEntity implements 
         return false;
     }
 
+    @Override
+    public void writeScreenOpeningData(ServerPlayer serverPlayerEntity, FriendlyByteBuf byteBuf) {
+    }
+    @Override
+    public abstract Component getDisplayName();
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        try {
+            return getMenuClass().getConstructor(int.class, Inventory.class, AbstractSouliumGeneratorTE.class).newInstance(i, inventory, this);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public abstract Class<? extends AbstractSouliumGeneratorScreenHandler> getMenuClass();
     @Override
     public int getContainerSize() {
         return 1;

@@ -2,6 +2,10 @@ package org.oceanic.magical_tech.blocks;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -9,9 +13,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 import org.oceanic.magical_tech.blocks.abstractions.SouliumBlock;
 import org.oceanic.magical_tech.blocks.abstractions.AbstractSouliumGeneratorTE;
-
 import java.lang.reflect.InvocationTargetException;
 
 import static net.minecraft.world.level.block.BaseEntityBlock.createTickerHelper;
@@ -22,7 +27,26 @@ public class AbstractSouliumGenerator<Q extends AbstractSouliumGeneratorTE> exte
         super(settings);
         this.clazz = clazz;
     }
-
+    @SuppressWarnings("deprecation")
+    @Nullable
+    @Override
+    public MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) {
+        if (level.getBlockEntity(blockPos) instanceof AbstractSouliumGeneratorTE te) {
+            return te;
+        }
+        return super.getMenuProvider(blockState, level, blockPos);
+    }
+    @SuppressWarnings("deprecation")
+    @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        if (!level.isClientSide) {
+            MenuProvider screenHandlerFactory = blockState.getMenuProvider(level, blockPos);
+            if (screenHandlerFactory != null) {
+                player.openMenu(screenHandlerFactory);
+            }
+        }
+        return InteractionResult.SUCCESS;
+    }
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         try {
