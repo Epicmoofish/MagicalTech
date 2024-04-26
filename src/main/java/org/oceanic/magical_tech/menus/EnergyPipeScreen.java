@@ -28,15 +28,15 @@ public class EnergyPipeScreen extends AbstractContainerScreen<EnergyPipeScreenHa
     private static final int directionLabelCenter = 20;
     private static final int blockLabelCenter = 65;
     private static final int directionIOCenter = 54;
-    private static final int squareStart = 14;
-    private static final int squareY = 50;
-    private static final int squareSize = 13;
+    private static final int squareStart = 15;
+    private static final int squareY = 51;
+    private static final int squareSize = 11;
     private static final int squareNext = 27;
 
 
-    private static final int downArrowY = 42;
-    private static final int arrowHeight = 7;
-    private static final int upArrowY = 25;
+    private static final int downArrowY = 43;
+    private static final int arrowHeight = 5;
+    private static final int upArrowY = 26;
 
     public EnergyPipeScreen(EnergyPipeScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
