@@ -1,7 +1,7 @@
 {
   "block.magical_tech.creative_soulium_generator": "Creative Soulium Generator",
-  "block.magical_tech.crude_soulium_generator": "Crude Soulium Generator",
-  "block.magical_tech.advanced_soulium_generator": "Advanced Soulium Generator",
+  "block.magical_tech.crude_soulium_generator": "Crude Soulium Burner",
+  "block.magical_tech.advanced_soulium_generator": "Advanced Soulium Burner",
   "block.magical_tech.soulium_battery": "Soulium Battery",
   "block.magical_tech.energy_pipe": "Energy Pipe",
   "block.magical_tech.energy_pipe_connection": "Energy Pipe Connection",
@@ -24,5 +24,7 @@
   "direction.south": "South",
   "direction.east": "East",
   "direction.west": "West",
-  "magical_tech.energy_pipe.title": "Energy Pipe Configuration"
+  "magical_tech.energy_pipe.title": "Energy Pipe Configuration",
+  "magical_tech.crude_soulium_generator.title": "Crude Soulium Burner",
+  "magical_tech.advanced_soulium_generator.title": "Advanced Soulium Burner"
 }

@@ -8,4 +8,12 @@ public class ExtraMath {
         }
         return q;
     }
+    public static int[] longSwapper(long val) {
+        int a = (int)(val >> 32);
+        int b = (int)val;
+        return new int[]{a, b};
+    }
+    public static long longSwapper(int a, int b) {
+        return (long)a << 32 | b & 0xFFFFFFFFL;
+    }
 }

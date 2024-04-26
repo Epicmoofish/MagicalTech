@@ -18,6 +18,8 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -36,6 +38,7 @@ public abstract class AbstractSouliumGeneratorTE extends BaseContainerBlockEntit
     private long soulium = 0;
     private long burnLeft = 0;
     private long currentMult = 1;
+    public long totalBurn = 0;
     private ItemStack stack = ItemStack.EMPTY;
     private final long souliumPerTick;
     public long getBurnLeft() {
@@ -59,6 +62,7 @@ public abstract class AbstractSouliumGeneratorTE extends BaseContainerBlockEntit
         nbt.putLong("soulium", soulium);
         nbt.putLong("power_left", getBurnLeft());
         nbt.putLong("current_mult", currentMult);
+        nbt.putLong("total_burn", totalBurn);
         CompoundTag stack_comp = nbt.getCompound("stack");
         stack.save(stack_comp);
         nbt.put("stack", stack_comp);
@@ -84,6 +88,7 @@ public abstract class AbstractSouliumGeneratorTE extends BaseContainerBlockEntit
         soulium = nbt.getLong("soulium");
         burnLeft = nbt.getLong("power_left");
         currentMult = nbt.getLong("current_mult");
+        totalBurn = nbt.getLong("total_burn");
         stack = ItemStack.of(nbt.getCompound("stack"));
     }
 
@@ -136,6 +141,7 @@ public abstract class AbstractSouliumGeneratorTE extends BaseContainerBlockEntit
                     totalUsed = Math.min(totalUsed, count);
                     long burnNum = soulium_in_item * totalUsed;
                     blockEntity.getItem(0).shrink((int) totalUsed);
+                    blockEntity.totalBurn = soulium_in_item;
                     if (burnNum >= burned_soulium) {
                         blockEntity.burnLeft = burnNum - burned_soulium;
                         total_created += burned_soulium;
@@ -194,7 +200,10 @@ public abstract class AbstractSouliumGeneratorTE extends BaseContainerBlockEntit
 
     @Override
     public void writeScreenOpeningData(ServerPlayer serverPlayerEntity, FriendlyByteBuf byteBuf) {
-
+        byteBuf.writeLong(totalBurn);
+        byteBuf.writeLong(burnLeft);
+        byteBuf.writeLong(soulium);
+        byteBuf.writeLong(maxSoulium);
     }
     @Override
     public abstract Component getDisplayName();
@@ -202,8 +211,27 @@ public abstract class AbstractSouliumGeneratorTE extends BaseContainerBlockEntit
     @org.jetbrains.annotations.Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        AbstractSouliumGeneratorTE te = this;
+        ContainerData data = new SimpleContainerData(8) {
+            @Override
+            public int get(int i) {
+                int[] totalBurn = ExtraMath.longSwapper(te.totalBurn);
+                int[] burnLeft = ExtraMath.longSwapper(te.burnLeft);
+                int[] soulium = ExtraMath.longSwapper(te.soulium);
+                int[] maxSoulium = ExtraMath.longSwapper(te.maxSoulium);
+                if (i == 0) return totalBurn[0];
+                if (i == 1) return burnLeft[0];
+                if (i == 2) return soulium[0];
+                if (i == 3) return maxSoulium[0];
+                if (i == 4) return totalBurn[1];
+                if (i == 5) return burnLeft[1];
+                if (i == 6) return soulium[1];
+                if (i == 7) return maxSoulium[1];
+                return 0;
+            }
+        };
         try {
-            return getMenuClass().getConstructor(int.class, Inventory.class, Container.class).newInstance(i, inventory, this);
+            return getMenuClass().getConstructor(int.class, Inventory.class, Container.class, ContainerData.class).newInstance(i, inventory, this, data);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

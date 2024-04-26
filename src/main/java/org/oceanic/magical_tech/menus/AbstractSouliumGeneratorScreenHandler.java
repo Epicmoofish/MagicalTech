@@ -1,24 +1,32 @@
 package org.oceanic.magical_tech.menus;
 
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import org.oceanic.magical_tech.soul_burning.SoulBurningMap;
+import org.oceanic.magical_tech.util.ExtraMath;
 
 public abstract class AbstractSouliumGeneratorScreenHandler extends AbstractContainerMenu {
     private final Container inventory;
+    public long burnLeft;
+    public long soulium;
+    public long totalBurn;
+    public long maxSoulium;
 
-    public AbstractSouliumGeneratorScreenHandler(MenuType<AbstractSouliumGeneratorScreenHandler> generatorMenu, int syncId, Inventory playerInventory, Container inventory) {
+    private final ContainerData data;
+
+    public AbstractSouliumGeneratorScreenHandler(MenuType<AbstractSouliumGeneratorScreenHandler> generatorMenu, int syncId, Inventory playerInventory, Container inventory, ContainerData data) {
         super(generatorMenu, syncId);
         checkContainerSize(inventory, 1);
         this.inventory = inventory;
         inventory.startOpen(playerInventory.player);
         //some inventories do custom logic when a player opens it.
-        this.addSlot(new SoulBurningSlot(inventory, 0, 80, 35));
+        this.addSlot(new SoulBurningSlot(inventory, 0, 80, 43));
         int j;
         for (j = 0; j < 3; ++j) {
             for (int k = 0; k < 9; ++k) {
@@ -28,7 +36,27 @@ public abstract class AbstractSouliumGeneratorScreenHandler extends AbstractCont
         for (j = 0; j < 9; ++j) {
             this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 142));
         }
+        this.data = data;
+        this.addDataSlots(data);
     }
+    public float getBurnPercentage() {
+        totalBurn = ExtraMath.longSwapper(data.get(0), data.get(4));
+        burnLeft = ExtraMath.longSwapper(data.get(1), data.get(5));
+        return Mth.clamp((float)burnLeft / (float)totalBurn, 0.0f, 1.0f);
+    }
+    public float getSouliumPercentage() {
+        soulium = ExtraMath.longSwapper(data.get(2), data.get(6));
+        maxSoulium = ExtraMath.longSwapper(data.get(3), data.get(7));
+        return Mth.clamp((float)soulium / (float)maxSoulium, 0.0f, 1.0f);
+    }
+    public AbstractSouliumGeneratorScreenHandler(MenuType<AbstractSouliumGeneratorScreenHandler> generatorMenu, int syncId, Inventory playerInventory, FriendlyByteBuf byteBuf) {
+        this(generatorMenu, syncId, playerInventory, new SimpleContainer(1), new SimpleContainerData(8));
+        totalBurn = byteBuf.readLong();
+        burnLeft = byteBuf.readLong();
+        soulium = byteBuf.readLong();
+        maxSoulium = byteBuf.readLong();
+    }
+
     private static class SoulBurningSlot extends Slot {
         @Override
         public boolean mayPlace(ItemStack itemStack) {
