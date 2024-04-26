@@ -10,6 +10,8 @@ public class CrudeSouliumGeneratorScreenHandler extends AbstractSouliumGenerator
     //This constructor gets called on the client when the server wants it to open the screenHandler,
     //The client will call the other constructor with an empty Inventory and the screenHandler will automatically
     //sync this empty inventory with the inventory on the server.
+
+    // This is not actually unused it is just called from something that the linter doesn't see
     @SuppressWarnings("unused")
     public CrudeSouliumGeneratorScreenHandler(int syncId, Inventory playerInventory, Container te, ContainerData data) {
         super(MagicalTech.CRUDE_GENERATOR_MENU, syncId, playerInventory, te, data);
