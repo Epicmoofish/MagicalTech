@@ -29,7 +29,7 @@ public enum SouliumProvider implements IBlockComponentProvider {
             percent = Math.round(percent);
             percent = percent / 10;
             IElementHelper helper = IElementHelper.get();
-            ProgressStyle style = helper.progressStyle().color(0xFFAA00AA, 0xFF660066);
+            ProgressStyle style = helper.progressStyle().color(0xFF00DDDD, 0xFF008888);
             tooltip.add(helper.progress(ratio, Component.translatable(MagicalTech.MOD_ID + ".soulium_provider",percent, MagicalTech.souliumString(holder.getSoulium(), Screen.hasShiftDown()), MagicalTech.souliumString(holder.getMaxSoulium(), Screen.hasShiftDown())), style, BoxStyle.getNestedBox(), true));
         } else {
             tooltip.add(Component.translatable(MagicalTech.MOD_ID + ".soulium_provider_error"));

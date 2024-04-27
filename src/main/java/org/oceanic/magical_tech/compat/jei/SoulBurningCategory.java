@@ -14,7 +14,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -90,13 +89,13 @@ public class SoulBurningCategory implements IRecipeCategory<SoulBurningRecipe> {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         Font font = Minecraft.getInstance().font;
-        String text = ChatFormatting.DARK_PURPLE + MagicalTech.souliumString(recipe.burnAmount(), Screen.hasShiftDown()) + " DS";
+        String text = MagicalTech.souliumString(recipe.burnAmount(), Screen.hasShiftDown()) + " DS";
         poseStack.translate(90 - font.width(text) / 2.0, 0, 0);
-        guiGraphics.drawString(font, text, 0, 0, 8, false);
+        guiGraphics.drawString(font, text, 0, 0, 0x00AAAA, false);
 
-        String text2 = ChatFormatting.DARK_PURPLE + String.valueOf(recipe.getMult()) + "x Speed";
+        String text2 = recipe.getMult() + "x Speed";
         poseStack.translate((font.width(text)-font.width(text2)) / 2.0, 10, 0);
-        guiGraphics.drawString(font, text2, 0, 0, 8, false);
+        guiGraphics.drawString(font, text2, 0, 0, 0x00AAAA, false);
 
         poseStack.popPose();
     }
